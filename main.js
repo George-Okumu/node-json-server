@@ -1,9 +1,10 @@
 const http = require("http"); // to run only through http
 const fs = require('fs'); // for file reader
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // This function reads a json file.
+// Pass in a file path whenever you call it
 function jsonReader(filePath, cb) {
     fs.readFile(filePath, (err, fileData) => {
         if (err) {
@@ -24,6 +25,7 @@ const server = http.createServer(async (req, res) => {
     if (req.url === "/alltweets" && req.method === "GET") {
         jsonReader("./twitter.json", (err, twitter) => {
             if (err) {
+                // if there is error with reading the json file, console log it
                 console.log(err);
                 return;
             }
@@ -34,7 +36,7 @@ const server = http.createServer(async (req, res) => {
         });
 
     }
-    // /single/tweet:id : GET
+    // /single/tweet/:id : GET
     else if (req.url.match(/\/single\/tweet\/([0-9]+)/) && req.method === "GET") {
         jsonReader("./twitter.json", (err, tweets) => {
             if (err) {
@@ -62,7 +64,7 @@ const server = http.createServer(async (req, res) => {
 
     }
     // /user/:name : GET detailed profile information given user's screen name
-    else if (req.url.match(/^\/user\/.+/)[0] && req.method === "GET") {
+    else if (req.url.match(/^\/user\/.+/) && req.method === "GET") {
         jsonReader("./twitter.json", (err, tweets) => {
             if (err) {
                 // if there is error with reading the json file, console log it
